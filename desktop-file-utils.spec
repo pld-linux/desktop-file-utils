@@ -1,14 +1,16 @@
+%define 	_snap	20031116
 Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.3
-Release:	1
+Release:	0.%{_snap}.1
 License:	GPL
 Group:		Applications
-Source0:	http://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	a1c8bcd648da58bfe0b142042292caa8
+Source0:	%{name}-%{version}-%{_snap}.tar.bz2
+# Source0-md5:	0fdf4caaea9b67a10f259906d0f92819
 URL:		http://www.freedesktop.org/software/desktop-file-utils/
 BuildRequires:	glib2-devel >= 2.0.0
+BuildRequires:	gnome-vfs2-devel >= 2.2.0
 BuildRequires:	popt-devel >= 1.5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -20,12 +22,32 @@ working with desktop entries.
 desktop-file-utils zawiera kilka narzêdzi uruchamianych z linii
 poleceñ, s³u¿±cych do pracy z elementami biurkowymi.
 
+%package -n gnome-vfs2-module-menu
+Summary:	Freedesktop.org style menu support module for gnome-vfs
+Summary(pl):	Obs³uga menu wed³ug specyfikacji z freedesktop.org
+Group:		Applications
+Requires:	gnome-vfs2 >= 2.2.0
+
+%description -n gnome-vfs2-module-menu
+This package contain module for gnome-vfs supporting menu with specification
+declared by freedesktop.org
+
+%description -n gnome-vfs2-module-menu -l pl
+Ten pakiet zawiera modu³ obs³ugi menu dla gnome-vfs wed³ug specyfikacji
+freedesktop.org
+
+
 %prep
-%setup -q
+%setup -q -n %{name}
 
 %build
+rm -f missing
+%{__libtoolize}
+%{__aclocal}
+%{__autoheader}
+%{__automake}
+%{__autoconf}
 %configure
-
 %{__make}
 
 %install
@@ -41,3 +63,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README
 %attr(755,root,root) %{_bindir}/*
+
+%files -n gnome-vfs2-module-menu
+%defattr(644,root,root,755)
+%{_sysconfdir}/gnome-vfs-2.0/modules/menu-modules.conf
+%attr(755,root,root) %{_libdir}/gnome-vfs-2.0/modules/*.so
+%{_libdir}/gnome-vfs-2.0/modules/*.la
