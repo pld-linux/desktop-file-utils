@@ -1,0 +1,27 @@
+diff -urN aa/desktop-file-utils-0.7/src/menu-process.c desktop-file-utils-0.7/src/menu-process.c
+--- aa/desktop-file-utils-0.7/src/menu-process.c	2004-07-25 23:08:53.876735744 +0200
++++ desktop-file-utils-0.7/src/menu-process.c	2004-07-26 00:30:05.416149184 +0200
+@@ -226,6 +226,23 @@
+             
+       ++i;
+     }
++	
++  MenuNode *mn;
++  char *fx;
++        
++  mn = menu_node_new (MENU_NODE_APP_DIR);
++  fx = g_build_filename (g_get_home_dir(),
++                        ".gnome2/vfolders/applications",
++                        NULL);
++  menu_node_set_content (mn, fx);
++  menu_node_insert_before (node, mn);
++
++  menu_verbose ("Adding <AppDir>%s</AppDir> in <DefaultAppDirs/>\n",
++                fx);
++        
++  g_free (fx);
++  menu_node_unref (mn);
++
+ 
+   /* remove the now-replaced node */
+   menu_node_unlink (node);
