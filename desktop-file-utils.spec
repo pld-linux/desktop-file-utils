@@ -9,8 +9,11 @@ Group:		Applications
 Source0:	%{name}-%{version}-%{_snap}.tar.bz2
 # Source0-md5:	0fdf4caaea9b67a10f259906d0f92819
 URL:		http://www.freedesktop.org/software/desktop-file-utils/
+BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRequires:	glib2-devel >= 2.0.0
 BuildRequires:	gnome-vfs2-devel >= 2.2.0
+BuildRequires:	libtool
 BuildRequires:	popt-devel >= 1.5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -29,13 +32,12 @@ Group:		Applications
 Requires:	gnome-vfs2 >= 2.2.0
 
 %description -n gnome-vfs2-module-menu
-This package contain module for gnome-vfs supporting menu with specification
-declared by freedesktop.org
+This package contain module for gnome-vfs supporting menu with
+specification declared by freedesktop.org.
 
 %description -n gnome-vfs2-module-menu -l pl
-Ten pakiet zawiera modu³ obs³ugi menu dla gnome-vfs wed³ug specyfikacji
-freedesktop.org
-
+Ten pakiet zawiera modu³ obs³ugi menu dla gnome-vfs wed³ug
+specyfikacji freedesktop.org.
 
 %prep
 %setup -q -n %{name}
