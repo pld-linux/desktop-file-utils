@@ -17,14 +17,15 @@ desktop-file-utils contains a couple of command line utilities for
 working with desktop entries.
 
 %description -l pl
-desktop-file-utils zawiera kilka narzêdzi uruchamianych z lini poleceñ
-s³u¿±cych do pracy z elementami biurkowymi.
+desktop-file-utils zawiera kilka narzêdzi uruchamianych z linii
+poleceñ, s³u¿±cych do pracy z elementami biurkowymi.
 
 %prep
 %setup -q
 
 %build
 %configure
+
 %{__make}
 
 %install
