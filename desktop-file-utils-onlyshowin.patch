@@ -1,0 +1,165 @@
+--- desktop-file-utils-0.6/src/menu-layout.h.menu-onlyshowin	2004-03-05 15:38:25.231357480 -0500
++++ desktop-file-utils-0.6/src/menu-layout.h	2004-03-05 15:39:10.444484040 -0500
+@@ -36,6 +36,7 @@
+   MENU_NODE_ROOT,
+   MENU_NODE_PASSTHROUGH,
+   MENU_NODE_MENU,
++  MENU_NODE_MENU_ONLY_SHOW_IN,
+   MENU_NODE_APP_DIR,
+   MENU_NODE_DEFAULT_APP_DIRS,
+   MENU_NODE_DIRECTORY_DIR,
+--- desktop-file-utils-0.6/src/menu-layout.c.menu-onlyshowin	2004-03-05 15:38:36.603628632 -0500
++++ desktop-file-utils-0.6/src/menu-layout.c	2004-03-05 15:41:41.088582656 -0500
+@@ -1642,6 +1642,9 @@
+     case MENU_NODE_MENU:
+       append_container (node, depth, "Menu", str);
+       break;
++    case MENU_NODE_MENU_ONLY_SHOW_IN:
++      append_simple (node, depth, "OnlyShowIn", str);
++      break;
+     case MENU_NODE_APP_DIR:
+       append_simple (node, depth, "AppDir", str);
+       break;
+--- desktop-file-utils-0.6/src/menu-parser.c.menu-onlyshowin	2004-03-05 16:02:22.766818872 -0500
++++ desktop-file-utils-0.6/src/menu-parser.c	2004-03-05 16:30:52.102960280 -0500
+@@ -334,7 +334,11 @@
+                                 error))
+         return;
+ 
+-      if (ELEMENT_IS ("AppDir"))
++      if (ELEMENT_IS ("OnlyShowIn"))
++        {
++          push_node (parser, MENU_NODE_MENU_ONLY_SHOW_IN);
++        }
++      else if (ELEMENT_IS ("AppDir"))
+         {
+           push_node (parser, MENU_NODE_APP_DIR);
+         }
+@@ -780,6 +784,7 @@
+ 
+   switch (menu_node_get_type (parser->stack_top))
+     {
++    case MENU_NODE_MENU_ONLY_SHOW_IN:
+     case MENU_NODE_APP_DIR:
+     case MENU_NODE_DIRECTORY_DIR:
+     case MENU_NODE_NAME:
+@@ -867,6 +872,7 @@
+ 
+   switch (menu_node_get_type (parser->stack_top))
+     {
++    case MENU_NODE_MENU_ONLY_SHOW_IN:
+     case MENU_NODE_APP_DIR:
+     case MENU_NODE_DIRECTORY_DIR:
+     case MENU_NODE_NAME:
+--- desktop-file-utils-0.6/src/menu-process.c.only-show-in-api	2004-05-04 14:38:29.593074535 -0400
++++ desktop-file-utils-0.6/src/menu-process.c	2004-05-04 14:38:29.605072675 -0400
+@@ -33,6 +33,11 @@
+ #define _(x) gettext ((x))
+ #define N_(x) x
+ 
++/* Global OnlyShowIn variable, works for both
++ * DesktopEntryTrees and Menus.
++ */
++static char *    only_show_in_desktop = NULL;
++
+ static void      menu_node_resolve_files            (MenuCache  *menu_cache,
+                                                      EntryCache *entry_cache,
+                                                      MenuNode   *node);
+@@ -1010,6 +1015,7 @@
+ struct DesktopEntryTree
+ {
+   int refcount;
++  char *only_show_in_env;
+   char *menu_file;
+   char *menu_file_dir;
+   EntryCache *entry_cache;
+@@ -1053,7 +1059,6 @@
+ 
+ DesktopEntryTree*
+ desktop_entry_tree_load (const char  *filename,
+-                         const char  *only_show_in_desktop,
+                          const char  *create_chaining_to,
+                          GError     **error)
+ {
+@@ -1111,6 +1116,7 @@
+   
+   tree = g_new0 (DesktopEntryTree, 1);
+   tree->refcount = 1;
++  tree->only_show_in_env = NULL;
+   tree->menu_cache = menu_cache;
+   tree->entry_cache = entry_cache;
+   tree->menu_file = canonical;
+@@ -1151,6 +1157,7 @@
+ 
+   if (tree->refcount == 0)
+     {
++      g_free (tree->only_show_in_env);
+       g_free (tree->menu_file);
+       g_free (tree->menu_file_dir);
+       menu_node_unref (tree->orig_node);
+@@ -1861,6 +1861,14 @@
+           }
+           break;
+ 
++        case MENU_NODE_MENU_ONLY_SHOW_IN:
++          {
++            if (only_show_in_desktop)
++              if (strcmp (only_show_in_desktop, menu_node_get_content (child)) != 0)
++                  deleted = TRUE;
++          }
++          break;
++
+         case MENU_NODE_NAME:
+           {
+             if (tree_node->name)
+@@ -3257,3 +3264,12 @@
+   g_free (change->path);
+   g_free (change);
+ }
++
++void
++desktop_set_only_show_in (const char *only_show_in)
++{
++  if (only_show_in_desktop)
++    g_free (only_show_in_desktop);
++
++  only_show_in_desktop = g_strdup (only_show_in);
++}
+--- desktop-file-utils-0.6/src/menu-process.h.only-show-in-api	2004-05-04 14:38:29.594074380 -0400
++++ desktop-file-utils-0.6/src/menu-process.h	2004-05-04 14:38:29.606072520 -0400
+@@ -60,7 +60,6 @@
+ } DesktopEntryTreePrintFlags;
+ 
+ DesktopEntryTree* desktop_entry_tree_load  (const char  *filename,
+-                                            const char  *only_show_in_desktop,
+                                             const char  *create_chaining_to,
+                                             GError     **error);
+ void              desktop_entry_tree_ref   (DesktopEntryTree *tree);
+@@ -172,5 +170,7 @@
+ 
+ void desktop_entry_tree_change_free (DesktopEntryTreeChange *change);
+ 
++/* Set OnlyShowIn globally */
++void        desktop_set_only_show_in (const char *only_show_in);
+ 
+ #endif /* MENU_PROCESS_H */
+--- desktop-file-utils-0.6/src/menu-tree-cache.c.only-show-in-api	2004-05-04 14:38:29.579076704 -0400
++++ desktop-file-utils-0.6/src/menu-tree-cache.c	2004-05-04 14:38:29.608072210 -0400
+@@ -135,7 +135,6 @@
+       
+       tmp_error = NULL;
+       reloaded = desktop_entry_tree_load (entry->canonical_path,
+-                                          NULL, /* FIXME only show in desktop */
+                                           entry->create_chaining_to,
+                                           &tmp_error);
+ 
+--- desktop-file-utils-0.6/src/menu-method.c.only-show-in-api	2004-05-04 14:43:02.375787404 -0400
++++ desktop-file-utils-0.6/src/menu-method.c	2004-05-04 14:43:09.751643963 -0400
+@@ -750,6 +750,7 @@
+ vfs_module_init (const char *method_name, const char *args)
+ {
+         desktop_entry_tree_diradd_callback_set (directory_add_callback);
++        desktop_set_only_show_in ("GNOME");
+         return &vtable;
+ }
+ 
