@@ -2,11 +2,12 @@ Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.6
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications
 Source0:	http://freedesktop.org/Software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	dcace3294470e9cdc9ebfe7de1881ece
+Patch0:		%{name}-menu.patch
 # don't append / at end of URL
 URL:		http://www.freedesktop.org/software/desktop-file-utils
 BuildRequires:	autoconf
@@ -30,6 +31,7 @@ Summary:	Freedesktop.org style menu support module for gnome-vfs
 Summary(pl):	Obs³uga menu wed³ug specyfikacji z freedesktop.org
 Group:		Applications
 Requires:	gnome-vfs2 >= 2.2.0
+Requires:	applnk >= 1.9.3-2
 
 %description -n gnome-vfs2-module-menu
 This package contains module for gnome-vfs supporting menu with
@@ -41,6 +43,7 @@ specyfikacji freedesktop.org.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__libtoolize}
