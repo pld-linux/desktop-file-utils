@@ -2,7 +2,7 @@ Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.9
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications
 Source0:	http://freedesktop.org/Software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
@@ -88,7 +88,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc AUTHORS ChangeLog README
 %attr(755,root,root) %{_bindir}/*
 
-%files -n gnome-vfs2-module-menu
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/gnome-vfs-2.0/modules/*.so
-%{_sysconfdir}/gnome-vfs-2.0/modules/menu.conf
+#files -n gnome-vfs2-module-menu
+#defattr(644,root,root,755)
+#attr(755,root,root) %{_libdir}/gnome-vfs-2.0/modules/*.so
+#{_sysconfdir}/gnome-vfs-2.0/modules/menu.conf
