@@ -1,0 +1,116 @@
+diff -urN aa/desktop-file-utils-0.6/src/menu-entries.c desktop-file-utils-0.6/src/menu-entries.c
+--- aa/desktop-file-utils-0.6/src/menu-entries.c	2004-07-22 01:22:36.741865272 +0200
++++ desktop-file-utils-0.6/src/menu-entries.c	2004-07-22 01:37:57.796843632 +0200
+@@ -1753,6 +1753,7 @@
+   GError *err;
+   char *categories;
+   Entry *e;
++  gboolean show;
+   
+   str = NULL;
+   len = 0;
+@@ -1765,10 +1766,32 @@
+       return NULL;
+     }
+ 
++	/* Check for NoDisplay */
++	char *nodisplay;
++	
++	show = TRUE;
++	
++	nodisplay = find_value (str, "NoDisplay");
++	
++	if (nodisplay != NULL)
++		if (strcasecmp (nodisplay, "True") == 0)
++			show = FALSE;
++
++	if (!show)
++		menu_verbose ("Not showing \"%s\" due to NoDisplay=%s\n",
++				filename, nodisplay);
++
++	g_free (nodisplay);
++
++	if (!show){
++		g_free (str);
++		return NULL;
++	}
++	/* End checking for NoDisplay */
++
+   if (cache->only_show_in_name)
+     {
+       char *onlyshowin;
+-      gboolean show;
+ 
+       show = TRUE;
+       
+diff -urN aa/desktop-file-utils-0.6/src/menu-layout.c desktop-file-utils-0.6/src/menu-layout.c
+--- aa/desktop-file-utils-0.6/src/menu-layout.c	2004-07-22 01:22:36.741865272 +0200
++++ desktop-file-utils-0.6/src/menu-layout.c	2004-07-22 01:43:43.405303160 +0200
+@@ -1645,6 +1645,9 @@
+     case MENU_NODE_MENU_ONLY_SHOW_IN:
+       append_simple (node, depth, "OnlyShowIn", str);
+       break;
++    case MENU_NODE_MENU_NO_DISPLAY:
++      append_simple (node, depth, "NoDisplay", str);
++      break;
+     case MENU_NODE_APP_DIR:
+       append_simple (node, depth, "AppDir", str);
+       break;
+diff -urN aa/desktop-file-utils-0.6/src/menu-layout.h desktop-file-utils-0.6/src/menu-layout.h
+--- aa/desktop-file-utils-0.6/src/menu-layout.h	2004-07-22 01:22:36.741865272 +0200
++++ desktop-file-utils-0.6/src/menu-layout.h	2004-07-22 01:43:10.477308976 +0200
+@@ -37,6 +37,7 @@
+   MENU_NODE_PASSTHROUGH,
+   MENU_NODE_MENU,
+   MENU_NODE_MENU_ONLY_SHOW_IN,
++  MENU_NODE_MENU_NO_DISPLAY,
+   MENU_NODE_APP_DIR,
+   MENU_NODE_DEFAULT_APP_DIRS,
+   MENU_NODE_DIRECTORY_DIR,
+diff -urN aa/desktop-file-utils-0.6/src/menu-parser.c desktop-file-utils-0.6/src/menu-parser.c
+--- aa/desktop-file-utils-0.6/src/menu-parser.c	2004-07-22 01:22:36.742865120 +0200
++++ desktop-file-utils-0.6/src/menu-parser.c	2004-07-22 01:45:04.482977480 +0200
+@@ -338,6 +338,10 @@
+         {
+           push_node (parser, MENU_NODE_MENU_ONLY_SHOW_IN);
+         }
++			else if (ELEMENT_IS ("NoDisplay"))
++        {
++          push_node (parser, MENU_NODE_MENU_NO_DISPLAY);
++        }
+       else if (ELEMENT_IS ("AppDir"))
+         {
+           push_node (parser, MENU_NODE_APP_DIR);
+@@ -785,6 +789,7 @@
+   switch (menu_node_get_type (parser->stack_top))
+     {
+     case MENU_NODE_MENU_ONLY_SHOW_IN:
++    case MENU_NODE_MENU_NO_DISPLAY:
+     case MENU_NODE_APP_DIR:
+     case MENU_NODE_DIRECTORY_DIR:
+     case MENU_NODE_NAME:
+@@ -873,6 +878,7 @@
+   switch (menu_node_get_type (parser->stack_top))
+     {
+     case MENU_NODE_MENU_ONLY_SHOW_IN:
++    case MENU_NODE_MENU_NO_DISPLAY:
+     case MENU_NODE_APP_DIR:
+     case MENU_NODE_DIRECTORY_DIR:
+     case MENU_NODE_NAME:
+diff -urN aa/desktop-file-utils-0.6/src/menu-process.c desktop-file-utils-0.6/src/menu-process.c
+--- aa/desktop-file-utils-0.6/src/menu-process.c	2004-07-22 01:22:36.746864512 +0200
++++ desktop-file-utils-0.6/src/menu-process.c	2004-07-22 01:49:07.279066864 +0200
+@@ -1995,6 +1995,13 @@
+           }
+           break;
+ 
++        case MENU_NODE_MENU_NO_DISPLAY:
++          {
++            if (strcasecmp (menu_node_get_content (child), "True") == 0)
++                  deleted = TRUE;
++          }
++          break;
++
+         case MENU_NODE_NAME:
+           {
+             if (tree_node->name)
