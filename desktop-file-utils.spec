@@ -3,7 +3,7 @@ Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.3
-Release:	0.%{_snap}.1
+Release:	1.%{_snap}.1
 License:	GPL
 Group:		Applications
 Source0:	%{name}-%{version}-%{_snap}.tar.bz2
