@@ -1,60 +1,64 @@
-diff -urN aa/desktop-file-utils-0.7/src/menu-entries.c desktop-file-utils-0.7/src/menu-entries.c
---- aa/desktop-file-utils-0.7/src/menu-entries.c	2004-07-28 21:48:48.387936296 +0200
-+++ desktop-file-utils-0.7/src/menu-entries.c	2004-07-28 22:03:14.458273592 +0200
-@@ -1938,6 +1938,56 @@
+diff -urN aa/desktop-file-utils-0.8/src/menu-entries.c desktop-file-utils-0.8/src/menu-entries.c
+--- aa/desktop-file-utils-0.8/src/menu-entries.c	2004-09-07 18:17:31.251622656 +0200
++++ desktop-file-utils-0.8/src/menu-entries.c	2004-09-07 18:29:07.293808160 +0200
+@@ -2027,12 +2027,14 @@
+ }
  
- 	/* End checking for NoDisplay */
- 
-+	if (!show)
-+	{
-+		e = entry_new (ENTRY_DIRECTORY, basename, filename, show);
-+		g_free (str);
-+		return e;
-+	}
-+
-+	/* Check for OnlyShowIn */
+ static Entry*
+-entry_new_directory_from_file (const char *filename,
++entry_new_directory_from_file (EntryCache *cache,
++                               const char *filename,
+                                const char *basename)
+ {
+   char *str;
+   GError *err;
+   char *nodisplay_str;
 +  char *onlyshowin;
-+
-+  show = TRUE;
-+      
-+  onlyshowin = find_value (str, "OnlyShowIn");
-+  
-+  if (onlyshowin != NULL)
-+	{
-+		char **split;
-+		int i;
-+
-+		show = FALSE;
-+          
-+		split = string_list_from_desktop_value (onlyshowin);
-+		i = 0;
-+		while (split[i] != NULL)
-+		{
-+			if (strcmp (split[i], "GNOME") == 0)
-+			{
-+				show = TRUE;
-+				break;
-+			}
-+
-+			++i;
-+		}
-+
-+		if (!show)
-+			menu_verbose ("Not showing \"%s\" due to OnlyShowIn=%s\n",
-+				filename, onlyshowin);
-+
-+		g_strfreev (split);
-+		g_free (onlyshowin);          
-+	}
-+	/* End checking for OnlyShowIn */
+   gboolean nodisplay;
+   
+   str = NULL;
+@@ -2058,6 +2060,35 @@
+ 
+       g_free (nodisplay_str);
+     }
 +	
-+	if (!show)
-+	{
-+		e = entry_new (ENTRY_DIRECTORY, basename, filename, show);
-+		g_free (str);
-+		return e;
-+	}
++  if (cache->only_show_in_name && nodisplay == FALSE)
++    {
++      onlyshowin = find_value (str, "OnlyShowIn");
++  
++      if (onlyshowin != NULL)
++        {
++          char **split;
++          int i;
 +
- 	e = entry_new (ENTRY_DIRECTORY, basename, filename, show);
- 	
- 	g_free (str);
++					nodisplay = TRUE;
++
++          split = string_list_from_desktop_value (onlyshowin);
++          i = 0;
++          while (split[i] != NULL)
++            {
++              if (strcmp (split[i], cache->only_show_in_name) == 0)
++                {
++                  nodisplay = FALSE;
++                  break;
++                }
++                  
++              ++i;
++            }
++
++          g_strfreev (split);
++          g_free (onlyshowin);          
++        }
++    }
+ 
+   return entry_new (ENTRY_DIRECTORY, basename, filename, nodisplay);
+ }
+@@ -2162,7 +2193,7 @@
+         {
+           Entry *e;
+ 
+-          e = entry_new_directory_from_file (fullpath, dent->d_name);
++          e = entry_new_directory_from_file (dir->cache, fullpath, dent->d_name);
+ 
+           menu_verbose ("Tried loading \"%s\": %s\n",
+                         fullpath, e ? "ok" : "failed");

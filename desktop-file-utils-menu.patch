@@ -1,11 +1,15 @@
 --- desktop-file-utils-0.6/src/menu-method.c.wiget	2004-07-21 14:27:59.483792832 +0200
 +++ desktop-file-utils-0.6/src/menu-method.c	2004-07-21 14:28:34.575975589 +0200
-@@ -155,7 +155,7 @@
+@@ -155,11 +155,7 @@
  	const char *scheme;
  	const char *menu_file;
  } all_schemes[] = {
--	{ "menu-test", "applications.menu" }
-+	{ "applications", "applications.menu" }
+-	{ "applications",    "applications.menu"    },
+-	{ "preferences",     "preferences.menu"     },
+-	{ "server-settings", "server-settings.menu" },
+-	{ "start-here",      "start-here.menu"      },
+-	{ "system-settings", "system-settings.menu" }
++	{ "applications",    "applications.menu"    }
  };
  
  static const char*
