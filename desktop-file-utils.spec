@@ -42,11 +42,11 @@ Requires:	applnk >= 1.9.3-2
 
 %description -n gnome-vfs2-module-menu
 This package contains module for gnome-vfs supporting menu with
-specification declared by freedesktop.org.
+specification declared by freedesktop.org .
 
 %description -n gnome-vfs2-module-menu -l pl
 Ten pakiet zawiera modu³ obs³ugi menu dla gnome-vfs wed³ug
-specyfikacji freedesktop.org.
+specyfikacji freedesktop.org .
 
 %prep
 %setup -q
