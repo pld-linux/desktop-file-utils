@@ -2,7 +2,7 @@ Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.8
-Release:	2
+Release:	3
 License:	GPL
 Group:		Applications
 Source0:	http://freedesktop.org/Software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
@@ -37,7 +37,7 @@ Summary(pl):	Obs³uga menu wed³ug specyfikacji z freedesktop.org
 Group:		Applications
 Provides:	gnome-vfs-menu-module = 1.0-1
 Obsoletes:	gnome-vfs2-vfolder-menu
-Requires:	gnome-vfs2 >= 2.6.1.1-3.1
+Requires:	gnome-vfs2 >= 2.8.0-2
 Requires:	applnk >= 1.9.4
 
 %description -n gnome-vfs2-module-menu
