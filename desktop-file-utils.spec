@@ -44,13 +44,13 @@ specyfikacji freedesktop.org.
 %setup -q -n %{name}
 
 %build
-rm -f missing
 %{__libtoolize}
 %{__aclocal}
 %{__autoheader}
 %{__automake}
 %{__autoconf}
-%configure
+%configure \
+	--disable-static
 %{__make}
 
 %install
@@ -58,6 +58,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+# remove unused *.la for gnome-vfs modules
+rm -f $RPM_BUILD_ROOT%{_libdir}/gnome-vfs-2.0/modules/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -71,4 +74,3 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_sysconfdir}/gnome-vfs-2.0/modules/menu-modules.conf
 %attr(755,root,root) %{_libdir}/gnome-vfs-2.0/modules/*.so
-%{_libdir}/gnome-vfs-2.0/modules/*.la
