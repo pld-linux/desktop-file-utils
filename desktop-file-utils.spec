@@ -37,7 +37,7 @@ poleceñ, s³u¿±cych do pracy z elementami biurkowymi.
 Summary:	Freedesktop.org style menu support module for gnome-vfs
 Summary(pl):	Obs³uga menu wed³ug specyfikacji z freedesktop.org
 Group:		Applications
-Requires:	gnome-vfs2 >= 2.2.0
+Requires:	gnome-vfs2 >= 2.6.1.1-3.1
 Requires:	applnk >= 1.9.3-2
 
 %description -n gnome-vfs2-module-menu
