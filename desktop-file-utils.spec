@@ -33,7 +33,7 @@ Group:		Applications
 Requires:	gnome-vfs2 >= 2.2.0
 
 %description -n gnome-vfs2-module-menu
-This package contain module for gnome-vfs supporting menu with
+This package contains module for gnome-vfs supporting menu with
 specification declared by freedesktop.org.
 
 %description -n gnome-vfs2-module-menu -l pl
