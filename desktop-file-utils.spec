@@ -2,7 +2,7 @@ Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.7
-Release:	0.9
+Release:	0.91
 License:	GPL
 Group:		Applications
 Source0:	http://freedesktop.org/Software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
@@ -14,6 +14,7 @@ Patch3:		%{name}-directory_mtime.patch
 Patch4:		%{name}-onlyshowin.patch
 Patch5:		%{name}-nodisplay.patch
 Patch6:		%{name}-noshowin.patch
+Patch7:		%{name}-home_dir.patch
 # don't append / at end of URL
 URL:		http://www.freedesktop.org/software/desktop-file-utils
 BuildRequires:	autoconf
@@ -56,6 +57,7 @@ specyfikacji freedesktop.org.
 %patch4 -p1
 %patch5 -p1
 %patch6 -p1
+%patch7 -p1
 
 %build
 %{__libtoolize}
