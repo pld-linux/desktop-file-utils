@@ -1,18 +1,21 @@
 #
 # TODO:
-#  - OnlyShowIn
-#  - don't display empty submenus
+#  - NoDisplay
 #
 Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.6
-Release:	2.1
+Release:	2.2
 License:	GPL
 Group:		Applications
 Source0:	http://freedesktop.org/Software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	dcace3294470e9cdc9ebfe7de1881ece
 Patch0:		%{name}-menu.patch
+Patch1:		%{name}-hide_empty_submenus.patch
+Patch2:		%{name}-directory_change_notify.patch
+Patch3:		%{name}-directory_mtime.patch
+Patch4:		%{name}-onlyshowin.patch
 # don't append / at end of URL
 URL:		http://www.freedesktop.org/software/desktop-file-utils
 BuildRequires:	autoconf
@@ -49,6 +52,10 @@ specyfikacji freedesktop.org.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
 
 %build
 %{__libtoolize}
