@@ -2,11 +2,12 @@ Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.7
-Release:	2
+Release:	3
 License:	GPL
 Group:		Applications
 Source0:	http://freedesktop.org/Software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	32b948c2676170dc01ac4849c00bc5d6
+Source1:	%{name}-default-modules.conf
 Patch0:		%{name}-menu.patch
 Patch1:		%{name}-hide_empty_submenus.patch
 Patch2:		%{name}-directory_change_notify.patch
@@ -40,6 +41,8 @@ poleceñ, s³u¿±cych do pracy z elementami biurkowymi.
 Summary:	Freedesktop.org style menu support module for gnome-vfs
 Summary(pl):	Obs³uga menu wed³ug specyfikacji z freedesktop.org
 Group:		Applications
+Provides:	gnome-vfs-menu-module
+Obsoletes:	gnome-vfs2-vfolder-menu
 Requires:	gnome-vfs2 >= 2.6.1.1-3.1
 Requires:	applnk >= 1.9.3-2
 
@@ -87,6 +90,8 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/gnome-vfs-2.0/modules/*.la
 # not needed - it's only for testing purposes
 rm -f $RPM_BUILD_ROOT%{_sysconfdir}/gnome-vfs-2.0/modules/menu-modules.conf
 
+install %{SOURCE1} $RPM_BUILD_ROOT%{_sysconfdir}/gnome-vfs-2.0/modules/default-modules.conf
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -98,3 +103,4 @@ rm -rf $RPM_BUILD_ROOT
 %files -n gnome-vfs2-module-menu
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/gnome-vfs-2.0/modules/*.so
+%{_sysconfdir}/gnome-vfs-2.0/modules/default-modules.conf
