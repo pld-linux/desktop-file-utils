@@ -1,0 +1,160 @@
+--- desktop-file-utils-0.6/src/menu-process.c.directory-mtime	2004-05-03 23:09:03.888792776 -0400
++++ desktop-file-utils-0.6/src/menu-process.c	2004-05-03 23:09:03.934785784 -0400
+@@ -1005,6 +1005,10 @@
+ /* make a shorter name */
+ typedef struct DesktopEntryTreeNode TreeNode;
+ 
++/* FIXME  modification time is kept on the tree right now,
++ * but should really be kept on the individual Entries and
++ * subdirs themselves.
++ */
+ struct DesktopEntryTree
+ {
+   int refcount;
+@@ -1015,6 +1019,7 @@
+   MenuNode   *orig_node;
+   MenuNode   *resolved_node;
+   TreeNode   *root;
++  time_t     mtime;
+   GSList     *monitored_dirs;    
+ };
+ 
+@@ -1039,6 +1044,12 @@
+   return tree->menu_file;
+ }
+ 
++const time_t desktop_entry_tree_get_mtime (DesktopEntryTree *tree)
++{
++  g_return_val_if_fail (tree != NULL, 0);
++
++  return tree->mtime;
++}
+ 
+ DesktopEntryTree*
+ desktop_entry_tree_load (const char  *filename,
+@@ -1107,6 +1118,7 @@
+   tree->orig_node = orig_node;
+   tree->resolved_node = resolved_node;
+   tree->root = NULL;
++  tree->mtime = time (NULL);   /* Initial modification time of now */
+   tree->monitored_dirs = NULL;
+   
+   return tree;
+@@ -1193,6 +1205,11 @@
+     tree->root = new_node;
+     process_only_unallocated (tree->root, allocated);
+     remove_empty_submenus (tree->root);
++
++    /* Update the modification time for the tree, so the
++     * panel knows to reload the VFS directory.
++     */
++    tree->mtime = time (NULL);
+   }
+ 
+   g_hash_table_destroy (allocated);
+--- desktop-file-utils-0.6/src/menu-process.h.directory-mtime	2004-05-03 23:09:03.891792320 -0400
++++ desktop-file-utils-0.6/src/menu-process.h	2004-05-03 23:09:03.937785328 -0400
+@@ -23,6 +23,7 @@
+ #define MENU_PROCESS_H
+ 
+ #include <glib.h>
++#include <time.h>
+ #include "desktop_file.h"
+ 
+ typedef struct DesktopEntryTree     DesktopEntryTree;
+@@ -137,6 +138,8 @@
+                                      GError          **error);
+ const char *desktop_entry_tree_get_menu_file_name (DesktopEntryTree *tree);
+ 
++const time_t desktop_entry_tree_get_mtime (DesktopEntryTree *tree);
++
+ /* Callback for each .desktop directory added */
+ typedef void (*DesktopEntryTreeDirAddCallback)(DesktopEntryTree * tree, const char *path);
+ void desktop_entry_tree_diradd_callback_set (DesktopEntryTreeDirAddCallback proc);
+--- desktop-file-utils-0.6/src/menu-method.c.directory-mtime	2004-05-03 23:09:03.912789128 -0400
++++ desktop-file-utils-0.6/src/menu-method.c	2004-05-03 23:42:05.910479680 -0400
+@@ -1024,8 +1024,9 @@
+ 
+ /* Fill in dir info that's true for all dirs in the vfs */
+ static void
+-fill_in_generic_dir_info (GnomeVFSFileInfo         *info,
+-			  GnomeVFSFileInfoOptions   options)
++fill_in_generic_dir_info (GnomeVFSFileInfo *info,
++			  GnomeVFSFileInfoOptions    options,
++                 DesktopEntryTree          *tree)
+ {
+ 	info->type = GNOME_VFS_FILE_TYPE_DIRECTORY;
+ 	
+@@ -1048,10 +1049,16 @@
+ 	/* We always own it */
+ 	info->uid = getuid ();
+ 	info->gid = getgid ();
+-	
++
++     /* FIXME  mtime is currently taken from the tree itself,
++      * and is not stored on the actual VFS objects themselves.
++      */
++     info->mtime = desktop_entry_tree_get_mtime (tree);
++
+ 	info->valid_fields |=
+ 		GNOME_VFS_FILE_INFO_FIELDS_TYPE |
+-		GNOME_VFS_FILE_INFO_FIELDS_PERMISSIONS;
++		GNOME_VFS_FILE_INFO_FIELDS_PERMISSIONS |
++		GNOME_VFS_FILE_INFO_FIELDS_MTIME;
+ }
+ 
+ static void
+@@ -1064,13 +1071,14 @@
+ 	g_assert (node != NULL);
+ 	g_assert (file_info != NULL);
+ 
+-	fill_in_generic_dir_info (file_info, options);
++	fill_in_generic_dir_info (file_info, options, tree);
+ }
+ 
+ /* Fill in file info that's true for all .desktop files */
+ static void
+ fill_in_generic_file_info (GnomeVFSFileInfo         *info,
+-			   GnomeVFSFileInfoOptions   options)
++                           GnomeVFSFileInfoOptions   options,
++                           DesktopEntryTree         *tree)
+ {
+ 	info->type = GNOME_VFS_FILE_TYPE_REGULAR;
+ 	
+@@ -1097,8 +1105,14 @@
+ 	info->uid = getuid ();
+ 	info->gid = getgid ();
+ 	
++     /* FIXME  mtime is currently taken from the tree itself,
++      * and is not stored on the actual VFS objects themselves.
++      */
++     info->mtime = desktop_entry_tree_get_mtime (tree);
++
+ 	info->valid_fields |= GNOME_VFS_FILE_INFO_FIELDS_TYPE |
+-		GNOME_VFS_FILE_INFO_FIELDS_PERMISSIONS;
++					  GNOME_VFS_FILE_INFO_FIELDS_MTIME |
++					  GNOME_VFS_FILE_INFO_FIELDS_PERMISSIONS;
+ }
+ 
+ static void
+@@ -1113,7 +1127,7 @@
+ 	g_assert (path != NULL);
+ 	g_assert (file_info != NULL);
+ 	
+-	fill_in_generic_file_info (file_info, options);
++	fill_in_generic_file_info (file_info, options, tree);
+ }
+ 
+ static GnomeVFSResult
+@@ -1452,9 +1466,9 @@
+         handle->current += 1;
+ 
+         if (handle->current <= handle->n_entries_that_are_subdirs) {
+-		fill_in_generic_dir_info (info, handle->options);
++		fill_in_generic_dir_info (info, handle->options, handle->tree);
+ 	} else {
+-		fill_in_generic_file_info (info, handle->options);
++		fill_in_generic_file_info (info, handle->options, handle->tree);
+ 	}
+ 
+         info->valid_fields &= ~ UNSUPPORTED_INFO_FIELDS;
