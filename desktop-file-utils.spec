@@ -8,7 +8,8 @@ License:	GPL
 Group:		Applications
 Source0:	%{name}-%{version}-%{_snap}.tar.bz2
 # Source0-md5:	0fdf4caaea9b67a10f259906d0f92819
-URL:		http://www.freedesktop.org/software/desktop-file-utils/
+# don't append / at end of URL
+URL:		http://www.freedesktop.org/software/desktop-file-utils
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	glib2-devel >= 2.0.0
