@@ -1,0 +1,19 @@
+--- desktop-file-utils-0.6/src/menu-method.c.wiget	2004-07-21 14:27:59.483792832 +0200
++++ desktop-file-utils-0.6/src/menu-method.c	2004-07-21 14:28:34.575975589 +0200
+@@ -155,7 +155,7 @@
+ 	const char *scheme;
+ 	const char *menu_file;
+ } all_schemes[] = {
+-	{ "menu-test", "applications.menu" }
++	{ "menu", "applications.menu" }
+ };
+ 
+ static const char*
+--- desktop-file-utils-0.6/src/menu-modules.conf.wiget	2004-07-21 14:28:09.198459261 +0200
++++ desktop-file-utils-0.6/src/menu-modules.conf	2004-07-21 14:28:18.469186631 +0200
+@@ -6,4 +6,4 @@
+ # <method 1> <method 2> ... <method N> : <module.so>
+ #
+ 
+-menu-test:  libmenu.so
++menu:  menu
