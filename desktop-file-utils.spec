@@ -2,12 +2,12 @@
 Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
-Version:	0.3
-Release:	1.%{_snap}.1
+Version:	0.5
+Release:	1
 License:	GPL
 Group:		Applications
-Source0:	%{name}-%{version}-%{_snap}.tar.bz2
-# Source0-md5:	0fdf4caaea9b67a10f259906d0f92819
+Source0:	http://freedesktop.org/Software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
+# Source0-md5:	4fd0b636f1784d7b139bb74803d5ec8a
 # don't append / at end of URL
 URL:		http://www.freedesktop.org/software/desktop-file-utils
 BuildRequires:	autoconf
@@ -41,7 +41,7 @@ Ten pakiet zawiera modu³ obs³ugi menu dla gnome-vfs wed³ug
 specyfikacji freedesktop.org.
 
 %prep
-%setup -q -n %{name}
+%setup -q
 
 %build
 %{__libtoolize}
