@@ -1,24 +1,18 @@
 Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
-Version:	0.7
-Release:	4
+Version:	0.8
+Release:	1
 License:	GPL
 Group:		Applications
 Source0:	http://freedesktop.org/Software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	32b948c2676170dc01ac4849c00bc5d6
+# Source0-md5:	b0dc11041949eecb877f755105f6b036
 Source1:	%{name}-default-modules.conf
 Patch0:		%{name}-menu.patch
-Patch1:		%{name}-hide_empty_submenus.patch
-Patch2:		%{name}-directory_change_notify.patch
-Patch3:		%{name}-directory_mtime.patch
-Patch4:		%{name}-onlyshowin.patch
-Patch5:		%{name}-nodisplay.patch
-Patch6:		%{name}-noshowin.patch
-Patch7:		%{name}-home_dir.patch
-Patch8:		%{name}-directory_nodisplay.patch
-Patch9:		%{name}-directory_onlyshowin.patch
-Patch10:	%{name}-directory_noshowin.patch
+Patch1:		%{name}-notshowin.patch
+Patch2:		%{name}-home_dir.patch
+Patch3:		%{name}-directory_onlyshowin.patch
+Patch4:		%{name}-directory_notshowin.patch
 # don't append / at end of URL
 URL:		http://www.freedesktop.org/software/desktop-file-utils
 BuildRequires:	autoconf
@@ -44,7 +38,7 @@ Group:		Applications
 Provides:	gnome-vfs-menu-module
 Obsoletes:	gnome-vfs2-vfolder-menu
 Requires:	gnome-vfs2 >= 2.6.1.1-3.1
-Requires:	applnk >= 1.9.3-2
+Requires:	applnk >= 1.9.4
 
 %description -n gnome-vfs2-module-menu
 This package contains module for gnome-vfs supporting menu with
@@ -61,12 +55,6 @@ specyfikacji freedesktop.org .
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
-%patch6 -p1
-%patch7 -p1
-%patch8 -p1
-%patch9 -p1
-%patch10 -p1
 
 %build
 %{__libtoolize}
