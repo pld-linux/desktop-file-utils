@@ -1,8 +1,13 @@
+#
+# TODO:
+#  - OnlyShowIn
+#  - don't display empty submenus
+#
 Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.6
-Release:	2
+Release:	2.1
 License:	GPL
 Group:		Applications
 Source0:	http://freedesktop.org/Software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
@@ -64,6 +69,9 @@ rm -rf $RPM_BUILD_ROOT
 # remove unused *.la for gnome-vfs modules
 rm -f $RPM_BUILD_ROOT%{_libdir}/gnome-vfs-2.0/modules/*.la
 
+# not needed - it's only for testing purposes
+rm -f $RPM_BUILD_ROOT%{_sysconfdir}/gnome-vfs-2.0/modules/menu-modules.conf
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -74,5 +82,4 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n gnome-vfs2-module-menu
 %defattr(644,root,root,755)
-%{_sysconfdir}/gnome-vfs-2.0/modules/menu-modules.conf
 %attr(755,root,root) %{_libdir}/gnome-vfs-2.0/modules/*.so
