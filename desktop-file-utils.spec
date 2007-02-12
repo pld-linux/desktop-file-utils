@@ -1,5 +1,5 @@
 Summary:	A couple of command line utilities for working with desktop entries
-Summary(pl.UTF-8):   Kilka narzędzi do pracy z elementami biurkowymi
+Summary(pl.UTF-8):	Kilka narzędzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.12
 Release:	1
