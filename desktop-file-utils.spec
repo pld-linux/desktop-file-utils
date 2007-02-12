@@ -1,5 +1,5 @@
 Summary:	A couple of command line utilities for working with desktop entries
-Summary(pl):	Kilka narzêdzi do pracy z elementami biurkowymi
+Summary(pl.UTF-8):   Kilka narzÄ™dzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.12
 Release:	1
@@ -20,9 +20,9 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 desktop-file-utils contains a couple of command line utilities for
 working with desktop entries.
 
-%description -l pl
-desktop-file-utils zawiera kilka narzêdzi uruchamianych z linii
-poleceñ, s³u¿±cych do pracy z elementami biurkowymi.
+%description -l pl.UTF-8
+desktop-file-utils zawiera kilka narzÄ™dzi uruchamianych z linii
+poleceÅ„, sÅ‚uÅ¼Ä…cych do pracy z elementami biurkowymi.
 
 %prep
 %setup -q
