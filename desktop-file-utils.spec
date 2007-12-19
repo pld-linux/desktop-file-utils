@@ -2,13 +2,12 @@ Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl.UTF-8):	Kilka narzędzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
 Version:	0.14
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications
-Source0:	http://freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
+Source0:	http://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
 # Source0-md5:	e0b5057a4e3166f34635ac6f27c712c0
-# don't append / at end of URL
-URL:		http://www.freedesktop.org/wiki/Software_2fdesktop_2dfile_2dutils
+URL:		http://www.freedesktop.org/wiki/Software/desktop-file-utils
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	glib2-devel >= 1:2.8.0
@@ -43,6 +42,9 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
+install -d $RPM_BUILD_ROOT%{_desktopdir}
+touch $RPM_BUILD_ROOT%{_desktopdir}/mimeinfo.cache
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -50,3 +52,4 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog README
 %attr(755,root,root) %{_bindir}/*
+%ghost %{_desktopdir}/mimeinfo.cache
