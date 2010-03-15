@@ -1,12 +1,12 @@
 Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl.UTF-8):	Kilka narzędzi do pracy z elementami biurkowymi
 Name:		desktop-file-utils
-Version:	0.15
+Version:	0.16
 Release:	1
 License:	GPL v2+
 Group:		Applications
-Source0:	http://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.gz
-# Source0-md5:	2fe8ebe222fc33cd4a959415495b7eed
+Source0:	http://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.bz2
+# Source0-md5:	6811712bced796d025d1a8a0f728d941
 URL:		http://www.freedesktop.org/wiki/Software/desktop-file-utils
 BuildRequires:	autoconf
 BuildRequires:	automake
