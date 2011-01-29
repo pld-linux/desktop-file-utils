@@ -1,8 +1,5 @@
-# TODO:
-# - Add unpackaged man files?
-#
 Summary:	A couple of command line utilities for working with desktop entries
-Summary(pl.UTF-8):	Kilka narzędzi do pracy z elementami biurkowymi
+Summary(pl.UTF-8):	Narzędzia linii poleceń do pracy z plikami desktop
 Name:		desktop-file-utils
 Version:	0.18
 Release:	1
@@ -11,11 +8,12 @@ Group:		Applications
 Source0:	http://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.bz2
 # Source0-md5:	d966b743eb394650f98d5dd56b9aece1
 URL:		http://www.freedesktop.org/wiki/Software/desktop-file-utils
-BuildRequires:	autoconf
-BuildRequires:	automake
+BuildRequires:	autoconf >= 2.50
+BuildRequires:	automake >= 1:1.9
 BuildRequires:	glib2-devel >= 1:2.8.0
 BuildRequires:	libtool
 BuildRequires:	pkgconfig
+Requires:	glib2 >= 1:2.8.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -23,8 +21,8 @@ desktop-file-utils contains a couple of command line utilities for
 working with desktop entries.
 
 %description -l pl.UTF-8
-desktop-file-utils zawiera kilka narzędzi uruchamianych z linii
-poleceń, służących do pracy z elementami biurkowymi.
+Pakiet desktop-file-utils zawiera kilka narzędzi uruchamianych z linii
+poleceń, służących do pracy z plikami desktop.
 
 %prep
 %setup -q
@@ -32,11 +30,12 @@ poleceń, służących do pracy z elementami biurkowymi.
 %build
 %{__libtoolize}
 %{__aclocal}
-%{__automake}
-%{__autoheader}
 %{__autoconf}
+%{__autoheader}
+%{__automake}
 %configure \
-	--disable-static
+	--disable-silent-rules
+
 %{__make}
 
 %install
@@ -53,8 +52,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc AUTHORS ChangeLog README
+%doc AUTHORS ChangeLog NEWS README
 %attr(755,root,root) %{_bindir}/desktop-file-install
 %attr(755,root,root) %{_bindir}/desktop-file-validate
 %attr(755,root,root) %{_bindir}/update-desktop-database
+%{_mandir}/man1/desktop-file-install.1*
+%{_mandir}/man1/desktop-file-validate.1*
+%{_mandir}/man1/update-desktop-database.1*
 %ghost %{_desktopdir}/mimeinfo.cache
