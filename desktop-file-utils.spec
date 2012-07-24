@@ -1,18 +1,20 @@
 Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl.UTF-8):	Narzędzia linii poleceń do pracy z plikami desktop
 Name:		desktop-file-utils
-Version:	0.18
+Version:	0.20
 Release:	1
 License:	GPL v2+
 Group:		Applications
-Source0:	http://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.bz2
-# Source0-md5:	d966b743eb394650f98d5dd56b9aece1
+Source0:	http://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.xz
+# Source0-md5:	8c85cbc13632ba69077c6bc41ce4d0ac
 URL:		http://www.freedesktop.org/wiki/Software/desktop-file-utils
 BuildRequires:	autoconf >= 2.50
-BuildRequires:	automake >= 1:1.9
+BuildRequires:	automake >= 1:1.11
 BuildRequires:	glib2-devel >= 1:2.8.0
 BuildRequires:	libtool
 BuildRequires:	pkgconfig
+BuildRequires:	tar >= 1:1.22
+BuildRequires:	xz
 Requires:	glib2 >= 1:2.8.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -53,9 +55,11 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog NEWS README
+%attr(755,root,root) %{_bindir}/desktop-file-edit
 %attr(755,root,root) %{_bindir}/desktop-file-install
 %attr(755,root,root) %{_bindir}/desktop-file-validate
 %attr(755,root,root) %{_bindir}/update-desktop-database
+%{_mandir}/man1/desktop-file-edit.1*
 %{_mandir}/man1/desktop-file-install.1*
 %{_mandir}/man1/desktop-file-validate.1*
 %{_mandir}/man1/update-desktop-database.1*
