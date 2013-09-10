@@ -1,12 +1,12 @@
 Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl.UTF-8):	Narzędzia linii poleceń do pracy z plikami desktop
 Name:		desktop-file-utils
-Version:	0.21
+Version:	0.22
 Release:	1
 License:	GPL v2+
 Group:		Applications
 Source0:	http://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	fda5c312c9fb3b8d818fb54f2c34db82
+# Source0-md5:	c6b9f9aac1ea143091178c23437e6cd0
 URL:		http://www.freedesktop.org/wiki/Software/desktop-file-utils
 BuildRequires:	autoconf >= 2.50
 BuildRequires:	automake >= 1:1.11
