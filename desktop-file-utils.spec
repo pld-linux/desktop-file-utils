@@ -26,6 +26,22 @@ working with desktop entries.
 Pakiet desktop-file-utils zawiera kilka narzędzi uruchamianych z linii
 poleceń, służących do pracy z plikami desktop.
 
+%package -n emacs-desktop-entry-mode
+Summary:	Desktop entry mode for Emacs
+Summary(pl.UTF-8):	Tryb plików desktop dla Emacsa
+Group:		Applications/Editors
+Requires:	%{name} = %{version}-%{release}
+Requires:	emacs
+%if "%{_rpmversion}" >= "5"
+BuildArch:	noarch
+%endif
+
+%description -n emacs-desktop-entry-mode
+Desktop entry mode for Emacs.
+
+%description -n emacs-desktop-entry-mode -l pl.UTF-8
+Tryb plików desktop dla Emacsa.
+
 %prep
 %setup -q
 
@@ -64,3 +80,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/desktop-file-validate.1*
 %{_mandir}/man1/update-desktop-database.1*
 %ghost %{_desktopdir}/mimeinfo.cache
+
+%files -n emacs-desktop-entry-mode
+%defattr(644,root,root,755)
+%{_datadir}/emacs/site-lisp/desktop-entry-mode.el
