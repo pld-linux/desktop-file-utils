@@ -1,18 +1,18 @@
 Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl.UTF-8):	Narzędzia linii poleceń do pracy z plikami desktop
 Name:		desktop-file-utils
-Version:	0.24
+Version:	0.26
 Release:	1
 License:	GPL v2+
 Group:		Applications
 Source0:	https://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	9364b82e14cfcad881161aa7ea5257ae
+# Source0-md5:	29739e005f5887cf41639b8450f3c23f
 URL:		https://www.freedesktop.org/wiki/Software/desktop-file-utils
-BuildRequires:	autoconf >= 2.50
-BuildRequires:	automake >= 1:1.11
 BuildRequires:	glib2-devel >= 1:2.8.0
-BuildRequires:	libtool
+BuildRequires:	meson >= 0.49.0
+BuildRequires:	ninja
 BuildRequires:	pkgconfig
+BuildRequires:	rpmbuild(macros) >= 1.736
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
 Requires:	glib2 >= 1:2.8.0
@@ -46,22 +46,14 @@ Tryb plików desktop dla Emacsa.
 %setup -q
 
 %build
-%{__libtoolize}
-%{__aclocal}
-%{__autoconf}
-%{__autoheader}
-%{__automake}
-%configure \
-	--disable-silent-rules
-
-%{__make}
+%meson build
+%ninja_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_desktopdir}
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+%ninja_install -C build
 
 touch $RPM_BUILD_ROOT%{_desktopdir}/mimeinfo.cache
 
