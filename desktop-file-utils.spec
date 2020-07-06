@@ -10,7 +10,7 @@ Source0:	https://www.freedesktop.org/software/desktop-file-utils/releases/%{name
 URL:		https://www.freedesktop.org/wiki/Software/desktop-file-utils
 BuildRequires:	glib2-devel >= 1:2.8.0
 BuildRequires:	meson >= 0.49.0
-BuildRequires:	ninja
+BuildRequires:	ninja >= 1.5
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.736
 BuildRequires:	tar >= 1:1.22
@@ -32,7 +32,7 @@ Summary(pl.UTF-8):	Tryb plików desktop dla Emacsa
 Group:		Applications/Editors
 Requires:	%{name} = %{version}-%{release}
 Requires:	emacs
-%if "%{_rpmversion}" >= "5"
+%if "%{_rpmversion}" >= "4.6"
 BuildArch:	noarch
 %endif
 
@@ -47,6 +47,7 @@ Tryb plików desktop dla Emacsa.
 
 %build
 %meson build
+
 %ninja_build -C build
 
 %install
