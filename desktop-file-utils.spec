@@ -32,9 +32,7 @@ Summary(pl.UTF-8):	Tryb plików desktop dla Emacsa
 Group:		Applications/Editors
 Requires:	%{name} = %{version}-%{release}
 Requires:	emacs
-%if "%{_rpmversion}" >= "4.6"
 BuildArch:	noarch
-%endif
 
 %description -n emacs-desktop-entry-mode
 Desktop entry mode for Emacs.
