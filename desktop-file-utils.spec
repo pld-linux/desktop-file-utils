@@ -1,22 +1,22 @@
 Summary:	A couple of command line utilities for working with desktop entries
 Summary(pl.UTF-8):	Narzędzia linii poleceń do pracy z plikami desktop
 Name:		desktop-file-utils
-Version:	0.27
+Version:	0.28
 Release:	1
 License:	GPL v2+
 Group:		Applications
 Source0:	https://www.freedesktop.org/software/desktop-file-utils/releases/%{name}-%{version}.tar.xz
-# Source0-md5:	fdf9215aea91acb6aebc43f770537f2c
+# Source0-md5:	dec5d7265c802db1fde3980356931b7b
 URL:		https://www.freedesktop.org/wiki/Software/desktop-file-utils
-BuildRequires:	glib2-devel >= 1:2.8.0
-BuildRequires:	meson >= 0.49.0
+BuildRequires:	glib2-devel >= 1:2.26
+BuildRequires:	meson >= 0.61.0
 BuildRequires:	ninja >= 1.5
 BuildRequires:	pkgconfig
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.736
 BuildRequires:	tar >= 1:1.22
 BuildRequires:	xz
-Requires:	glib2 >= 1:2.8.0
+Requires:	glib2 >= 1:2.26
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
